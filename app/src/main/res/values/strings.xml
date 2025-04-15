@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Pokemon Apps</string>
+    <string name="text_retry">Retry</string>
+    <string name="text_hint_password">Enter password</string>
+    <string name="text_register_description">Don\'t have account? Register</string>
+    <string name="text_login">Login</string>
+    <string name="text_hint_username">Enter username</string>
+    <string name="text_hint_name">Enter name</string>
+    <string name="text_register">Register</string>
+</resources>
