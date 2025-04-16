@@ -1,11 +1,11 @@
 package com.rbs.pokemonapps.data.repoImpl
 
+import com.rbs.pokemonapps.data.source.RegisterLocalSource
 import com.rbs.pokemonapps.domain.repository.RegisterRepository
 
 class RegisterRepoImpl(
-
+    private val dataSource: RegisterLocalSource
 ) : RegisterRepository {
-    override fun registerUser(username: String, email: String, password: String) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun registerUser(name: String, username: String, password: String): Boolean =
+        dataSource.insertUser(name, username, password)
 }

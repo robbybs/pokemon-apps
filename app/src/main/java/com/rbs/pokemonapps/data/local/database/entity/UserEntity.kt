@@ -4,9 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class PokeEntity(
+data class UserEntity(
     @PrimaryKey
-    val id: Int,
+    val username: String,
     val name: String,
-    val url: String
+    val password: String
 )

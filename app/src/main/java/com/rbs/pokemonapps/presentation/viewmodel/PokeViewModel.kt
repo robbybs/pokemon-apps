@@ -8,7 +8,10 @@ import com.rbs.pokemonapps.data.ResultState
 import com.rbs.pokemonapps.domain.model.PokeItemDomain
 import com.rbs.pokemonapps.domain.usecase.PokeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -20,9 +23,11 @@ import javax.inject.Inject
 class PokeViewModel @Inject constructor(
     private val useCase: PokeUseCase
 ) : ViewModel() {
-
     private var _viewState = MutableStateFlow<ResultState<PagingData<PokeItemDomain>>>(ResultState.Loading)
     val viewState = _viewState.asStateFlow()
+
+    private val _searchResults = MutableSharedFlow<ResultState<List<PokeItemDomain>>>()
+    val searchResults = _searchResults.asSharedFlow()
 
     init {
         fetchData()
@@ -44,4 +49,22 @@ class PokeViewModel @Inject constructor(
         }
     }
 
+    fun searchQuery(query: String) {
+        if (query.isNotBlank()) {
+            getAllQuery(query)
+        } else {
+            fetchData()
+        }
+    }
+
+    private fun getAllQuery(query: String) {
+        viewModelScope.launch {
+            _searchResults.emit(ResultState.Loading)
+            when (val result = useCase.getAllPoke(query)) {
+                is ResultState.Loading -> Unit
+                is ResultState.Success ->  _searchResults.emit(ResultState.Success(result.data.listPoke))
+                is ResultState.Error -> _searchResults.emit(ResultState.Error(result.message))
+            }
+        }
+    }
 }

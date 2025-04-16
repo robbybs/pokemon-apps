@@ -7,4 +7,10 @@
     <string name="text_hint_username">Enter username</string>
     <string name="text_hint_name">Enter name</string>
     <string name="text_register">Register</string>
+    <string name="text_experience_format">Base experience: %d</string>
+    <string name="text_body_format">Height: %1d, Weight: %2d</string>
+    <string name="text_abilities">Abilities</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_logout">Logout</string>
 </resources>
