@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,11 +30,7 @@ class PokeViewModel @Inject constructor(
     private val _searchResults = MutableSharedFlow<ResultState<List<PokeItemDomain>>>()
     val searchResults = _searchResults.asSharedFlow()
 
-    init {
-        fetchData()
-    }
-
-    private fun fetchData() {
+    fun fetchData() {
         viewModelScope.launch {
             useCase.getListPoke()
                 .cachedIn(viewModelScope)
@@ -49,15 +46,7 @@ class PokeViewModel @Inject constructor(
         }
     }
 
-    fun searchQuery(query: String) {
-        if (query.isNotBlank()) {
-            getAllQuery(query)
-        } else {
-            fetchData()
-        }
-    }
-
-    private fun getAllQuery(query: String) {
+    fun getAllQuery(query: String) {
         viewModelScope.launch {
             _searchResults.emit(ResultState.Loading)
             when (val result = useCase.getAllPoke(query)) {

@@ -12,6 +12,8 @@ import android.widget.EditText
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.PagingData
 import com.rbs.pokemonapps.data.ResultState
@@ -24,7 +26,6 @@ import com.rbs.pokemonapps.presentation.viewmodel.PokeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -47,9 +48,17 @@ class HomeFragment : Fragment() {
     }
 
     private fun subscribeUI(view: View) {
+        resetSearchState()
         initRecyclerView()
         setHideKeyboard(view)
         searchData()
+    }
+
+    private fun resetSearchState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            pokeAdapter.submitData(PagingData.empty())
+            viewModel.fetchData()
+        }
     }
 
     private fun initRecyclerView() {
@@ -102,18 +111,23 @@ class HomeFragment : Fragment() {
     private fun searchData() {
         binding.etSearch.doOnTextChanged { text, _, _, _ ->
             searchJob?.cancel()
-            val queryText = text?.toString()?.trim()
+            val queryText = text?.trim().toString()
             searchJob = lifecycleScope.launch {
                 delay(300)
-                viewModel.searchQuery(queryText.toString())
-                pokeAdapter.submitData(PagingData.empty())
+                if (queryText.isNotEmpty()) {
+                    viewModel.getAllQuery(queryText)
+                    pokeAdapter.submitData(PagingData.empty())
+                }
             }
         }
     }
 
     private fun subscribeObserver() {
-        lifecycleScope.launch {
-            viewModel.viewState.collect {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.viewState.flowWithLifecycle(
+                viewLifecycleOwner.lifecycle,
+                Lifecycle.State.STARTED
+            ).collect {
                 when (it) {
                     ResultState.Loading -> setLoading(true)
                     is ResultState.Success -> setData(it.data)
@@ -122,7 +136,7 @@ class HomeFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewModel.searchResults.collectLatest { state ->
                 when (state) {
                     is ResultState.Loading -> setLoading(true)
@@ -142,8 +156,8 @@ class HomeFragment : Fragment() {
         pokeAdapter.submitData(data)
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
         binding.etSearch.text?.clear()
     }
 }
