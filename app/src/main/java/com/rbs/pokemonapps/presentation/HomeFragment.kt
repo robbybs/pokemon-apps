@@ -9,12 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.rbs.pokemonapps.data.ResultState
 import com.rbs.pokemonapps.databinding.FragmentHomeBinding
@@ -35,6 +37,7 @@ class HomeFragment : Fragment() {
     private val viewModel by viewModels<PokeViewModel>()
     private val pokeAdapter by lazy { PokeAdapter() }
     private var searchJob: Job? = null
+    private var isLoaded = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +61,7 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             pokeAdapter.submitData(PagingData.empty())
             viewModel.fetchData()
+            isLoaded = true
         }
     }
 
@@ -112,36 +116,65 @@ class HomeFragment : Fragment() {
         binding.etSearch.doOnTextChanged { text, _, _, _ ->
             searchJob?.cancel()
             val queryText = text?.trim().toString()
-            searchJob = lifecycleScope.launch {
+            searchJob = viewLifecycleOwner.lifecycleScope.launch {
                 delay(300)
+                if (isLoaded) {
+                    isLoaded = false
+                    return@launch
+                }
+
                 if (queryText.isNotEmpty()) {
-                    viewModel.getAllQuery(queryText)
                     pokeAdapter.submitData(PagingData.empty())
+                    viewModel.getAllQuery(queryText)
+                } else {
+                    viewModel.fetchData()
                 }
             }
         }
     }
 
     private fun subscribeObserver() {
+        loadingObserver()
+        dataObserver()
+        searchObserver()
+    }
+
+    private fun loadingObserver() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            pokeAdapter.loadStateFlow
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collectLatest { loadStates ->
+                    val isLoading = loadStates.refresh is LoadState.Loading
+                    setLoading(isLoading)
+                }
+        }
+    }
+
+    private fun dataObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.viewState.flowWithLifecycle(
                 viewLifecycleOwner.lifecycle,
                 Lifecycle.State.STARTED
             ).collect {
                 when (it) {
-                    ResultState.Loading -> setLoading(true)
+                    ResultState.Loading -> Unit
                     is ResultState.Success -> setData(it.data)
-                    is ResultState.Error -> setLoading(false)
+                    is ResultState.Error -> showError(it.message)
                 }
             }
         }
+    }
 
+    private fun searchObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.searchResults.collectLatest { state ->
                 when (state) {
                     is ResultState.Loading -> setLoading(true)
                     is ResultState.Success -> setData(PagingData.from(state.data))
-                    is ResultState.Error -> setLoading(false)
+                    is ResultState.Error -> {
+                        setLoading(false)
+                        showError(state.message)
+                    }
                 }
             }
         }
@@ -154,6 +187,10 @@ class HomeFragment : Fragment() {
     private suspend fun setData(data: PagingData<PokeItemDomain>) {
         setLoading(false)
         pokeAdapter.submitData(data)
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onPause() {
