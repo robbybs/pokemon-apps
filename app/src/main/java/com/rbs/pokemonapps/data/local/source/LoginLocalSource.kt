@@ -1,4 +1,4 @@
-package com.rbs.pokemonapps.data.source
+package com.rbs.pokemonapps.data.local.source
 
 import com.rbs.pokemonapps.data.local.database.dao.PokeDao
 

@@ -1,7 +1,7 @@
-package com.rbs.pokemonapps.data.source
+package com.rbs.pokemonapps.data.network.source
 
 import com.rbs.pokemonapps.data.ResultState
-import com.rbs.pokemonapps.data.network.ApiService
+import com.rbs.pokemonapps.data.network.service.ApiService
 import com.rbs.pokemonapps.data.network.model.PokeData
 import com.rbs.pokemonapps.utils.toData
 

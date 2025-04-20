@@ -1,6 +1,6 @@
 package com.rbs.pokemonapps.data.repoImpl
 
-import com.rbs.pokemonapps.data.source.LoginLocalSource
+import com.rbs.pokemonapps.data.local.source.LoginLocalSource
 import com.rbs.pokemonapps.domain.repository.LoginRepository
 
 class LoginRepoImpl(

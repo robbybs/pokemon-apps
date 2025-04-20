@@ -6,11 +6,11 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.rbs.pokemonapps.presentation.HomeFragment"
+        android:name="com.rbs.pokemonapps.presentation.fragment.HomeFragment"
         android:label="Home" />
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.rbs.pokemonapps.presentation.ProfileFragment"
+        android:name="com.rbs.pokemonapps.presentation.fragment.ProfileFragment"
         android:label="Profile" />
 </navigation>

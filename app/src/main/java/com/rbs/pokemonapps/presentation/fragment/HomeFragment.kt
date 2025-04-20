@@ -1,4 +1,4 @@
-package com.rbs.pokemonapps.presentation
+package com.rbs.pokemonapps.presentation.fragment
 
 import android.content.Context
 import android.graphics.Rect

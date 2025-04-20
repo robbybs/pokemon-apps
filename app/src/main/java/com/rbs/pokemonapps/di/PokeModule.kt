@@ -1,9 +1,9 @@
 package com.rbs.pokemonapps.di
 
-import com.rbs.pokemonapps.data.network.ApiService
-import com.rbs.pokemonapps.data.source.PokePagingSource
+import com.rbs.pokemonapps.data.network.service.ApiService
+import com.rbs.pokemonapps.data.network.source.PokePagingSource
 import com.rbs.pokemonapps.data.repoImpl.PokeRepoImpl
-import com.rbs.pokemonapps.data.source.PokeRemoteSource
+import com.rbs.pokemonapps.data.network.source.PokeRemoteSource
 import com.rbs.pokemonapps.domain.repository.PokeRepository
 import com.rbs.pokemonapps.domain.usecase.PokeUseCase
 import dagger.Module

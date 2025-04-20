@@ -1,7 +1,7 @@
 package com.rbs.pokemonapps.data.repoImpl
 
 import com.rbs.pokemonapps.data.ResultState
-import com.rbs.pokemonapps.data.source.DetailRemoteSource
+import com.rbs.pokemonapps.data.network.source.DetailRemoteSource
 import com.rbs.pokemonapps.domain.model.PokeDetailDomain
 import com.rbs.pokemonapps.domain.repository.PokeDetailRepository
 import com.rbs.pokemonapps.utils.toDomain

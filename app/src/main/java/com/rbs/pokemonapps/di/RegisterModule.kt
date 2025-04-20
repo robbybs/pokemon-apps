@@ -2,7 +2,7 @@ package com.rbs.pokemonapps.di
 
 import com.rbs.pokemonapps.data.local.database.dao.PokeDao
 import com.rbs.pokemonapps.data.repoImpl.RegisterRepoImpl
-import com.rbs.pokemonapps.data.source.RegisterLocalSource
+import com.rbs.pokemonapps.data.local.source.RegisterLocalSource
 import com.rbs.pokemonapps.domain.repository.RegisterRepository
 import com.rbs.pokemonapps.domain.usecase.RegisterUseCase
 import dagger.Module

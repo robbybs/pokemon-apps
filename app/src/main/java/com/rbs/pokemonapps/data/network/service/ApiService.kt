@@ -1,4 +1,4 @@
-package com.rbs.pokemonapps.data.network
+package com.rbs.pokemonapps.data.network.service
 
 import com.rbs.pokemonapps.data.network.model.PokeDetailResponse
 import com.rbs.pokemonapps.data.network.model.PokeResponse

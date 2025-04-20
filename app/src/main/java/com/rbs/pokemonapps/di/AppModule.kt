@@ -8,7 +8,7 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.rbs.pokemonapps.data.local.database.dao.PokeDao
 import com.rbs.pokemonapps.data.local.database.PokeDatabase
-import com.rbs.pokemonapps.data.network.ApiService
+import com.rbs.pokemonapps.data.network.service.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

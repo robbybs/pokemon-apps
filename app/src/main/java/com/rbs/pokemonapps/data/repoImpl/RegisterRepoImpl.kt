@@ -1,6 +1,6 @@
 package com.rbs.pokemonapps.data.repoImpl
 
-import com.rbs.pokemonapps.data.source.RegisterLocalSource
+import com.rbs.pokemonapps.data.local.source.RegisterLocalSource
 import com.rbs.pokemonapps.domain.repository.RegisterRepository
 
 class RegisterRepoImpl(
