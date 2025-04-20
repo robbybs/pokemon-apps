@@ -1,6 +1,7 @@
 package com.rbs.pokemonapps.utils
 
 import com.rbs.pokemonapps.data.local.database.entity.UserEntity
+import com.rbs.pokemonapps.data.local.model.UserData
 import com.rbs.pokemonapps.data.network.model.AbilityDetail
 import com.rbs.pokemonapps.data.network.model.AbilityDetailData
 import com.rbs.pokemonapps.data.network.model.AbilityItem
@@ -84,7 +85,13 @@ fun StatsItemData.toDomain() = StatsItemDomain(
     statsName = statsDetail.name
 )
 
-fun UserEntity.toDomain() = UserDomain(
+fun UserEntity.toData() = UserData(
+    username = username,
+    name = name,
+    password = password
+)
+
+fun UserData.toDomain() = UserDomain(
     username = username,
     name = name,
     password = password
