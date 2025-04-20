@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
@@ -152,10 +151,8 @@ class HomeFragment : Fragment() {
 
     private fun dataObserver() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.viewState.flowWithLifecycle(
-                viewLifecycleOwner.lifecycle,
-                Lifecycle.State.STARTED
-            ).collect {
+            viewModel.viewState
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle).collect {
                 when (it) {
                     ResultState.Loading -> Unit
                     is ResultState.Success -> setData(it.data)
