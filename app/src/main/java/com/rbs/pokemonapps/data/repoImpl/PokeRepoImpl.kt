@@ -26,9 +26,7 @@ class PokeRepoImpl(
             enablePlaceholders = false
         ),
         pagingSourceFactory = { dataSource }
-    ).flow
-        .map { it.map { data -> data.toDomain() } }
-        .flowOn(Dispatchers.IO)
+    ).flow.map { it.map { data -> data.toDomain() } }
 
     override suspend fun getAllPokemon(query: String): ResultState<PokeDomain> =
         when (val result = allDataSource.getAllData(query)) {
