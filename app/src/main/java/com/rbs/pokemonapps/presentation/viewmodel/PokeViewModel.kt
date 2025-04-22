@@ -8,6 +8,7 @@ import com.rbs.pokemonapps.data.ResultState
 import com.rbs.pokemonapps.domain.model.PokeItemDomain
 import com.rbs.pokemonapps.domain.usecase.PokeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,7 +48,7 @@ class PokeViewModel @Inject constructor(
     }
 
     fun getAllQuery(query: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _searchResults.emit(ResultState.Loading)
             when (val result = useCase.getAllPoke(query)) {
                 is ResultState.Loading -> Unit

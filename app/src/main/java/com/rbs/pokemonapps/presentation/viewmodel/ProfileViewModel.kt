@@ -7,6 +7,7 @@ import com.rbs.pokemonapps.data.local.datastore.DataStoreManager
 import com.rbs.pokemonapps.domain.model.UserDomain
 import com.rbs.pokemonapps.domain.usecase.ProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -31,7 +32,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun getDetail() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             dataStore.getUserId.collectLatest {
                 val result = useCase.getProfile(it.orEmpty())
                 _viewState.value = result
@@ -40,7 +41,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun logout() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             dataStore.clearLoginState()
             _logoutState.emit(true)
         }

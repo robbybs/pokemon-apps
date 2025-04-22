@@ -6,6 +6,7 @@ import com.rbs.pokemonapps.data.ResultState
 import com.rbs.pokemonapps.domain.model.PokeDetailDomain
 import com.rbs.pokemonapps.domain.usecase.DetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,7 +20,7 @@ class DetailViewModel @Inject constructor(
     val viewState = _viewState.asStateFlow()
 
     fun getDetail(id: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             when (val result = useCase.getDetail(id)) {
                 is ResultState.Loading -> Unit
                 is ResultState.Success ->  _viewState.value = ResultState.Success(result.data)

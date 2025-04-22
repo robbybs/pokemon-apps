@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.rbs.pokemonapps.data.local.datastore.DataStoreManager
 import com.rbs.pokemonapps.domain.usecase.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -23,7 +24,7 @@ class LoginViewModel @Inject constructor(
     fun validate(username: String, password: String): Boolean = username.isNotEmpty() && password.isNotEmpty()
 
     fun login(username: String, password: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val result = useCase.login(username, password)
             if (result) {
                 storeManager.apply {
